@@ -1,0 +1,413 @@
+From 0b100bd6252f278a2d94815be682f9ee01e8b844 Mon Sep 17 00:00:00 2001
+From: EcSamuel <samuelethanc@gmail.com>
+Date: Thu, 9 May 2024 21:58:13 -0500
+Subject: [PATCH] Skeleton and added stars feature.
+
+---
+ .idea/.gitignore     |   8 +++++++
+ .idea/React-Test.iml |  12 +++++++++++
+ .idea/misc.xml       |   6 ++++++
+ .idea/modules.xml    |   8 +++++++
+ .idea/vcs.xml        |   6 ++++++
+ src/App.css          |  35 -------------------------------
+ src/App.js           |  49 +++++++++++++++++++++++++++++++------------
+ src/Star.js          |  29 +++++++++++++++++++++++++
+ src/assets/star.jpg  | Bin 0 -> 11015 bytes
+ src/instructions.txt |  15 +++++++++++++
+ 10 files changed, 120 insertions(+), 48 deletions(-)
+ create mode 100644 .idea/.gitignore
+ create mode 100644 .idea/React-Test.iml
+ create mode 100644 .idea/misc.xml
+ create mode 100644 .idea/modules.xml
+ create mode 100644 .idea/vcs.xml
+ create mode 100644 src/Star.js
+ create mode 100644 src/assets/star.jpg
+ create mode 100644 src/instructions.txt
+
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+new file mode 100644
+index 0000000..13566b8
+--- /dev/null
++++ b/.idea/.gitignore
+@@ -0,0 +1,8 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Editor-based HTTP Client requests
++/httpRequests/
++# Datasource local storage ignored files
++/dataSources/
++/dataSources.local.xml
+diff --git a/.idea/React-Test.iml b/.idea/React-Test.iml
+new file mode 100644
+index 0000000..24643cc
+--- /dev/null
++++ b/.idea/React-Test.iml
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="WEB_MODULE" version="4">
++  <component name="NewModuleRootManager">
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/.tmp" />
++      <excludeFolder url="file://$MODULE_DIR$/temp" />
++      <excludeFolder url="file://$MODULE_DIR$/tmp" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+new file mode 100644
+index 0000000..28a804d
+--- /dev/null
++++ b/.idea/misc.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="JavaScriptSettings">
++    <option name="languageLevel" value="ES6" />
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+new file mode 100644
+index 0000000..a494512
+--- /dev/null
++++ b/.idea/modules.xml
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/.idea/React-Test.iml" filepath="$PROJECT_DIR$/.idea/React-Test.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+index 0000000..35eb1dd
+--- /dev/null
++++ b/.idea/vcs.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/src/App.css b/src/App.css
+index 74b5e05..4931613 100644
+--- a/src/App.css
++++ b/src/App.css
+@@ -1,38 +1,3 @@
+ .App {
+   text-align: center;
+ }
+-
+-.App-logo {
+-  height: 40vmin;
+-  pointer-events: none;
+-}
+-
+-@media (prefers-reduced-motion: no-preference) {
+-  .App-logo {
+-    animation: App-logo-spin infinite 20s linear;
+-  }
+-}
+-
+-.App-header {
+-  background-color: #282c34;
+-  min-height: 100vh;
+-  display: flex;
+-  flex-direction: column;
+-  align-items: center;
+-  justify-content: center;
+-  font-size: calc(10px + 2vmin);
+-  color: white;
+-}
+-
+-.App-link {
+-  color: #61dafb;
+-}
+-
+-@keyframes App-logo-spin {
+-  from {
+-    transform: rotate(0deg);
+-  }
+-  to {
+-    transform: rotate(360deg);
+-  }
+-}
+diff --git a/src/App.js b/src/App.js
+index 3784575..1a1a561 100644
+--- a/src/App.js
++++ b/src/App.js
+@@ -1,25 +1,48 @@
+-import logo from './logo.svg';
+ import './App.css';
++import Star from './Star';
++
++const displayStars = (movie) => {
++    // average ratings computed from users and display as a number of "stars" out of five
++    let totalRatingScore = 0; // reset for each movie
++    for (let rating of movie.ratings) {
++        totalRatingScore += rating;
++    }
++    return totalRatingScore / movie.ratings.length
++}
+ 
+ function App() {
+   return (
+     <div className="App">
+       <header className="App-header">
+-        <img src={logo} className="App-logo" alt="logo" />
+-        <p>
+-          Edit <code>src/App.js</code> and save to reload.
+-        </p>
+-        <a
+-          className="App-link"
+-          href="https://reactjs.org"
+-          target="_blank"
+-          rel="noopener noreferrer"
+-        >
+-          Learn React
+-        </a>
++        <Star rating={displayStars()}>
++        </Star>
+       </header>
+     </div>
+   );
+ }
+ 
++
++const getMovies = () => {
++return [
++    {
++        title: 'Armageddon',
++        description: 'Man dies for other man who wants to die for the first man\'s daughter or something.',
++        ratings: [4],
++        reviews: [
++                'Is okay. Not bad',
++                'Maybe watch it again when they learn how hard drilling really is'
++        ]
++    },
++    {
++        title: 'The Big Lebowski',
++        description: 'Bowler man has bastard child while friend dies after league play. A toe is involved.',
++        ratings: [5,4,3,5],
++        reviews: [
++            'Real good',
++            '"Where\'s my money Lebowski?"'
++        ]
++    }
++]
++}
++
+ export default App;
+diff --git a/src/Star.js b/src/Star.js
+new file mode 100644
+index 0000000..d5985e6
+--- /dev/null
++++ b/src/Star.js
+@@ -0,0 +1,29 @@
++import './App.css';
++import starImage from './assets/star.jpg'
++
++
++function buildStars(props) {
++    return (
++        <div>
++            {(() => {
++                    const arr = [];
++                    for (let i = 0; i < props.rating; i++) {
++                        arr.push(
++                            <img src={starImage} className="App-logo" alt="logo"/>
++                        );
++                    }
++                return arr;
++                })()}
++        </div>
++    );
++}
++
++function Star(props) {
++    return (
++        <div className="star">
++            {buildStars(props)}
++        </div>
++    );
++}
++
++export default Star;
+diff --git a/src/assets/star.jpg b/src/assets/star.jpg
+new file mode 100644
+index 0000000000000000000000000000000000000000..9203e6c253c109d1b8e1daa6148ff223b3a63afb
+GIT binary patch
+literal 11015
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/src/instructions.txt b/src/instructions.txt
+new file mode 100644
+index 0000000..f79e356
+--- /dev/null
++++ b/src/instructions.txt
+@@ -0,0 +1,15 @@
++Using what you've learned this week, create a page of an application that enables users to vote and leave reviews on movies.
++All data necessary for this assignment, including Movies and Reviews, can be pulled from an API or you can create the Movies and their Reviews yourself.
++Your application must include the following components:
++
++MovieList: a container for all the Movie components and their data.
++
++Movie: a component that represents movie data (i.e. image, synopsis, rating, etc…)
++
++Stars: a one to five-star rating component that allows users to rate something (movies in this case, but remember that components are reusable, so you could use it elsewhere!)
++
++ReviewList: a container inside of a Movie that houses Review components.
++
++Review: A text review a user can leave on a movie.
++
++ReviewForm: a form at the bottom of a Movie component that allows users to leave reviews. When submitted, the review should be added to the movie. All this data can be stored in an array, no networking or database needed for this assignment.
+\ No newline at end of file
+-- 
+2.33.0
+
